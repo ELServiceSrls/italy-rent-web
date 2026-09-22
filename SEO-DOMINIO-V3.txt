@@ -1,0 +1,4 @@
+ITALY RENT V3.0 — SEO + DOMINIO
+Dominio canonico predisposto: https://www.italyrent.eu
+D1/R2/bindings invariati.
+Dopo il deploy: collegare entrambi i custom domain, redirect 301 apex -> www, verificare HTTPS, poi Search Console e sitemap.
