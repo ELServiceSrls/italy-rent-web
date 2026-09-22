@@ -108,7 +108,7 @@ if(location.pathname.endsWith('contatti.html') && new URLSearchParams(location.s
 // V2.5: dismiss the floating ARIX promo card independently from the chatbot
 document.querySelectorAll('.arix-card-close').forEach(btn=>btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();btn.closest('.arix-side-card')?.remove()}));
 
-// V2.9.3 — catalogo pubblico: unica fonte D1, nessuna vettura demo statica
+// V2.9.4 — catalogo pubblico: unica fonte D1, nessuna vettura demo statica
 let LIVE_VEHICLES=[];
 const euro=n=>Number(n||0).toLocaleString(lang==='en'?'en-IE':'it-IT',{maximumFractionDigits:0});
 function liveCard(v,mode){
@@ -129,11 +129,11 @@ async function loadLiveCatalog(){
   if(!r.ok) throw new Error('HTTP '+r.status);
   LIVE_VEHICLES=await r.json();
   ARIX_CARS.splice(0,ARIX_CARS.length,...LIVE_VEHICLES.map(v=>({name:v.name,type:v.type,fuel:v.fuel,gear:v.gear,year:+v.year||0,km:+v.km||0,price:+v.sale_price||0,rent_price:+v.rent_price||0,for_rent:+v.for_rent,for_sale:+v.for_sale,id:v.id})));
-  const page=(location.pathname.split('/').pop()||'index.html').toLowerCase();
+  const page=(location.pathname.split('/').pop()||'index').toLowerCase().replace(/\.html$/,'');
   let list=[],mode='rent';
-  if(page==='index.html'||page===''){list=LIVE_VEHICLES.filter(v=>+v.featured).slice(0,8)}
-  else if(page==='noleggio.html'){list=LIVE_VEHICLES.filter(v=>+v.for_rent)}
-  else if(page==='vendita.html'){list=LIVE_VEHICLES.filter(v=>+v.for_sale);mode='sale'}
+  if(page==='index'||page===''){list=LIVE_VEHICLES.filter(v=>+v.featured).slice(0,8)}
+  else if(page==='noleggio'){list=LIVE_VEHICLES.filter(v=>+v.for_rent)}
+  else if(page==='vendita'){list=LIVE_VEHICLES.filter(v=>+v.for_sale);mode='sale'}
   else return;
   box.innerHTML=list.length?list.map(v=>liveCard(v,(mode==='sale'||(!+v.for_rent&&+v.for_sale))?'sale':'rent')).join(''):liveEmpty();
   box.querySelectorAll('.carpic img').forEach(img=>img.onerror=()=>{img.classList.add('broken');const f=img.nextElementSibling;if(f)f.style.display='flex'});
