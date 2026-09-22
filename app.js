@@ -107,3 +107,36 @@ if(location.pathname.endsWith('contatti.html') && new URLSearchParams(location.s
 
 // V2.5: dismiss the floating ARIX promo card independently from the chatbot
 document.querySelectorAll('.arix-card-close').forEach(btn=>btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();btn.closest('.arix-side-card')?.remove()}));
+
+// V2.9 — catalogo pubblico dinamico collegato a Cloudflare D1/R2
+let LIVE_VEHICLES=[];
+const euro=n=>Number(n||0).toLocaleString(lang==='en'?'en-IE':'it-IT',{maximumFractionDigits:0});
+function liveCard(v,mode){
+ const sale=mode==='sale';
+ const spec=sale
+  ? `${v.type||''} • ${v.year||'-'} • ${Number(v.km||0).toLocaleString('it-IT')} km • ${v.fuel||''} • ${v.gear||''}`
+  : `${v.type||''} • ${v.fuel||''} • ${v.gear||''} • ${v.seats||5} posti`;
+ const price=sale?`€ ${euro(v.sale_price)}`:`da € ${euro(v.rent_price)}/giorno`;
+ const action=sale?`<a class="primary" href="contatti.html?vehicle=${v.id}">Richiedi</a>`:`<a class="primary" href="prenotazione.html?vehicle=${v.id}">Prenota</a>`;
+ return `<article class="car live-car" data-id="${v.id}"><div class="carpic"><img loading="lazy" src="${v.image_url||'assets/logo-symbol.png'}" alt="${String(v.name||'Veicolo').replace(/"/g,'&quot;')}"><div class="photo-fallback">${v.name||'Veicolo'}</div><span class="badge ${sale?'sale-badge':''}">${sale?'Vendita':'Noleggio'}</span></div><div class="carbody"><h3>${v.name||'Veicolo'}</h3><div class="spec">${spec}</div><div class="price ${sale?'sale-price':''}">${price}</div><div class="car-actions"><a href="veicolo.html?id=${v.id}">Dettagli</a>${action}</div></div></article>`;
+}
+function liveEmpty(){return `<div class="catalog-empty"><b>${lang==='en'?'No vehicles currently available.':'Nessun veicolo disponibile al momento.'}</b><p>${lang==='en'?'Contact Italy Rent for a personalised request.':'Contatta Italy Rent per una richiesta personalizzata.'}</p><a class="btn greenbtn" href="contatti.html">${lang==='en'?'Contact us':'Contattaci'}</a></div>`}
+async function loadLiveCatalog(){
+ try{
+  const r=await fetch('/api/vehicles',{cache:'no-store'}); if(!r.ok)throw new Error('catalog');
+  LIVE_VEHICLES=await r.json();
+  // Aggiorna anche il motore di ricerca ARIX con il catalogo reale.
+  ARIX_CARS.splice(0,ARIX_CARS.length,...LIVE_VEHICLES.map(v=>({name:v.name,type:v.type,fuel:v.fuel,gear:v.gear,year:+v.year||0,km:+v.km||0,price:+v.sale_price||0,rent_price:+v.rent_price||0,for_rent:+v.for_rent,for_sale:+v.for_sale,id:v.id})));
+  const path=location.pathname.split('/').pop()||'index.html';
+  const box=document.querySelector('.cars'); if(!box)return;
+  let list=[],mode='rent';
+  if(path==='index.html'||path===''){ list=LIVE_VEHICLES.filter(v=>+v.featured).slice(0,8); }
+  else if(path==='noleggio.html'){ list=LIVE_VEHICLES.filter(v=>+v.for_rent); }
+  else if(path==='vendita.html'){ list=LIVE_VEHICLES.filter(v=>+v.for_sale); mode='sale'; }
+  else return;
+  // In home una vettura solo vendita deve essere resa come vendita.
+  box.innerHTML=list.length?list.map(v=>liveCard(v,(path==='vendita.html'||(!+v.for_rent&&+v.for_sale))?'sale':'rent')).join(''):liveEmpty();
+  box.querySelectorAll('.carpic img').forEach(img=>img.onerror=()=>{img.classList.add('broken');const f=img.nextElementSibling;if(f)f.style.display='flex'});
+ }catch(e){console.error('Catalogo Italy Rent non disponibile',e)}
+}
+loadLiveCatalog();
