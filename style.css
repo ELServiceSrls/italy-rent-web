@@ -98,3 +98,44 @@ body.arix-chat-open .arix-side-card{opacity:0;pointer-events:none;transform:tran
 .vehicle-description h2{margin-top:0}.vehicle-description p{font-size:17px;line-height:1.7;color:#46545e;white-space:pre-line}
 @media(max-width:850px){.vehicle-detail-grid{grid-template-columns:1fr}.vehicle-photo-card{min-height:280px}.vehicle-spec-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:520px){.vehicle-spec-grid{grid-template-columns:1fr}.vehicle-price{font-size:28px}.vehicle-actions{flex-direction:column}.vehicle-actions .btn{text-align:center}}
+
+
+/* V3.0.6 — ARIX mobile readability */
+@media(max-width:760px){
+  .arix-side-card{
+    right:12px;
+    bottom:108px;
+    width:min(300px,calc(100vw - 24px));
+    box-sizing:border-box;
+    padding:14px 38px 14px 14px;
+    border-radius:18px;
+    text-align:left;
+    display:grid;
+    grid-template-columns:62px minmax(0,1fr);
+    gap:12px;
+    align-items:center;
+  }
+  .arix-side-card>img{
+    width:62px;
+    height:62px;
+    margin:0;
+    grid-row:1;
+  }
+  .arix-side-copy span{display:block;font-size:9px;margin-bottom:3px}
+  .arix-side-copy b{font-size:16px;line-height:1.15;margin:0 0 2px}
+  .arix-side-copy strong{font-size:18px;line-height:1.15;margin:0 0 8px}
+  .arix-side-copy p{display:none}
+  .arix-side-card .arix-start{font-size:14px;padding:10px 9px}
+  .arix-card-close{top:7px;right:7px;width:26px;height:26px}
+  .gioia{
+    right:12px;
+    bottom:18px;
+    max-width:calc(100vw - 24px);
+    box-sizing:border-box;
+    padding:6px 14px 6px 6px;
+  }
+  .gioia .avatar{width:48px;height:48px;flex:0 0 48px}
+  .gioia span{min-width:0}
+  .gioia span b{font-size:16px}
+  .gioia small{font-size:12px;white-space:normal;line-height:1.2}
+}
