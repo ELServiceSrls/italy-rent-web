@@ -31,7 +31,76 @@ document.querySelectorAll('.lang').forEach(b=>b.addEventListener('click',()=>{la
 translatePage();
 
 document.querySelectorAll('.carpic img').forEach(img=>img.onerror=()=>{img.classList.add('broken');let f=img.nextElementSibling;if(f)f.style.display='flex'});
-const answers={noleggio:'Puoi scegliere sede, date e categoria nella pagina Noleggio Auto e simulare la prenotazione.',vendita:'Nella pagina Auto in vendita trovi 10 vetture demo con prezzi fittizi e richiesta informazioni.',documenti:'Per la demo: patente valida, documento di identità e metodo di pagamento. Le condizioni reali saranno definite da Italy Rent.',h24:'Per assistenza H24 chiama il centralino 081 913 1386. La pagina Assistenza spiega il percorso dedicato.',sedi:'Italy Rent è presente nelle 8 sedi demo indicate: Bolzano, Parma, Lido di Camaiore, Roma, Napoli Volla, Napoli Pollena Trocchia, Napoli Somma Vesuviana e Foggia.',operatore:'Puoi chiamare il centralino 081 913 1386 oppure utilizzare WhatsApp.'};
-const chat=document.getElementById('chat'),messages=document.getElementById('messages');if(chat){document.getElementById('gioiaBtn').onclick=()=>chat.classList.toggle('open');document.getElementById('closeChat').onclick=()=>chat.classList.remove('open');document.querySelectorAll('.quick button').forEach(b=>b.onclick=()=>reply(b.textContent,answers[b.dataset.q]));document.getElementById('chatForm').onsubmit=e=>{e.preventDefault();let i=document.getElementById('chatInput'),q=i.value.trim();if(!q)return;let l=q.toLowerCase(),a=l.includes('vend')||l.includes('acquist')?answers.vendita:l.includes('document')?answers.documenti:l.includes('assist')||l.includes('h24')?answers.h24:l.includes('sede')?answers.sedi:l.includes('operat')||l.includes('telefono')?answers.operatore:answers.noleggio;reply(q,a);i.value=''};}function reply(q,a){messages.innerHTML+=`<div class="user">${q}</div><div class="bot">${a}</div>`;messages.scrollTop=messages.scrollHeight}
+
+// ARIX — guided vehicle finder (demo, client-side only)
+const ARIX_CARS=[
+ {name:'Fiat 500',type:'City Car',fuel:'Benzina',gear:'Manuale',year:2022,km:25000,price:14900},
+ {name:'Toyota Yaris',type:'Utilitaria',fuel:'Ibrida',gear:'Automatico',year:2023,km:21000,price:19900},
+ {name:'Renault Clio',type:'Utilitaria',fuel:'Benzina',gear:'Manuale',year:2024,km:9000,price:20500},
+ {name:'Volkswagen Golf',type:'Compatta',fuel:'Benzina',gear:'Automatico',year:2022,km:36000,price:23900},
+ {name:'Peugeot 308',type:'Compatta',fuel:'Ibrida',gear:'Automatico',year:2023,km:29000,price:24500},
+ {name:'Jeep Avenger',type:'SUV',fuel:'Ibrida',gear:'Automatico',year:2024,km:11000,price:24900},
+ {name:'Nissan Qashqai',type:'SUV',fuel:'Ibrida',gear:'Automatico',year:2023,km:31000,price:28900},
+ {name:'BMW Serie 3',type:'Berlina',fuel:'Diesel',gear:'Automatico',year:2022,km:42000,price:32900},
+ {name:'Audi Q5',type:'SUV',fuel:'Diesel',gear:'Automatico',year:2022,km:48000,price:39900},
+ {name:'Mercedes Classe V',type:'Monovolume',fuel:'Diesel',gear:'Automatico',year:2021,km:55000,price:44900}
+];
+const chat=document.getElementById('chat'),messages=document.getElementById('messages');
+let arix={step:0,data:{}};
+const flow=['mode','location','type','budget','year','km','gear','fuel','brand','model'];
+const qs={
+ it:{mode:'Cerchi un veicolo da acquistare o a noleggio?',location:'In quale località ti trovi? Puoi indicare città o CAP.',type:'Che tipologia di veicolo preferisci?',budget:'Qual è il tuo budget massimo?',year:'Da quale anno di immatricolazione vuoi partire?',km:'Qual è il chilometraggio massimo che accetteresti?',gear:'Preferisci cambio manuale o automatico?',fuel:'Quale alimentazione preferisci?',brand:'Hai una marca preferita? Scrivila oppure scegli “Indifferente”.',model:'Hai già in mente un modello? Scrivilo oppure scegli “Indifferente”.'},
+ en:{mode:'Are you looking to buy or rent a vehicle?',location:'Where are you located? Enter a city or postcode.',type:'What type of vehicle do you prefer?',budget:'What is your maximum budget?',year:'What is the minimum registration year you prefer?',km:'What is the maximum mileage you would accept?',gear:'Do you prefer manual or automatic transmission?',fuel:'Which fuel type do you prefer?',brand:'Do you have a preferred make? Type it or choose “Any”.',model:'Do you already have a model in mind? Type it or choose “Any”.'}
+};
+function bot(t){if(!messages)return;messages.insertAdjacentHTML('beforeend',`<div class="bot">${t}</div>`);messages.scrollTop=messages.scrollHeight}
+function usr(t){messages.insertAdjacentHTML('beforeend',`<div class="user">${t}</div>`);messages.scrollTop=messages.scrollHeight}
+function options(arr){return `<div class="choice-grid">${arr.map(x=>`<button type="button" class="arix-choice" data-v="${x}">${x}</button>`).join('')}</div>`}
+function ask(){let key=flow[arix.step],L=lang==='en'?'en':'it';let extra='';
+ if(key==='mode') extra=options(L==='it'?['Acquisto','Noleggio']:['Purchase','Rental']);
+ if(key==='type') extra=options(['City Car','Utilitaria','Compatta','Berlina','SUV','Monovolume']);
+ if(key==='gear') extra=options(L==='it'?['Indifferente','Manuale','Automatico']:['Any','Manual','Automatic']);
+ if(key==='fuel') extra=options(L==='it'?['Indifferente','Benzina','Diesel','Ibrida','Elettrica']:['Any','Petrol','Diesel','Hybrid','Electric']);
+ if(key==='brand'||key==='model') extra=options([L==='it'?'Indifferente':'Any']);
+ bot(qs[L][key]+extra);
+}
+function startArix(){if(!chat)return;chat.classList.add('open');arix={step:0,data:{}};messages.innerHTML='';bot(lang==='en'?'<b>ARIX</b> here. I’ll ask you a few quick questions to find the best vehicle for you.':'Sono <b>ARIX</b>. Ti farò poche domande per trovare il veicolo più adatto a te.');ask();}
+function arixContactButton(){
+ const L=lang==='en'?'en':'it';
+ const label=L==='it'?'Vai alla pagina Contatti →':'Go to Contact page →';
+ return `<a class="arix-contact-btn" href="contatti.html?arix=1">${label}</a>`;
+}
+function saveArixRequest(){try{sessionStorage.setItem('arixRequest',JSON.stringify(arix.data||{}))}catch(e){}}
+function finishArix(){let d=arix.data,L=lang==='en'?'en':'it';let isBuy=/acquist|purchase/i.test(d.mode||'');let found=ARIX_CARS.filter(c=>{
+ let ok=true, any=/indifferente|any/i;
+ if(d.type&&!any.test(d.type)) ok=ok&&c.type.toLowerCase().includes(d.type.toLowerCase());
+ let b=parseInt((d.budget||'').replace(/\D/g,'')); if(isBuy&&b)ok=ok&&c.price<=b;
+ let y=parseInt(d.year);if(y)ok=ok&&c.year>=y;let k=parseInt((d.km||'').replace(/\D/g,''));if(k)ok=ok&&c.km<=k;
+ if(d.gear&&!any.test(d.gear))ok=ok&&c.gear.toLowerCase().startsWith(d.gear.toLowerCase().slice(0,5));
+ if(d.fuel&&!any.test(d.fuel))ok=ok&&c.fuel.toLowerCase().startsWith(d.fuel.toLowerCase().slice(0,4));
+ if(d.brand&&!any.test(d.brand))ok=ok&&c.name.toLowerCase().includes(d.brand.toLowerCase());
+ if(d.model&&!any.test(d.model))ok=ok&&c.name.toLowerCase().includes(d.model.toLowerCase());return ok;}).slice(0,3);
+ if(found.length){bot((L==='it'?'Ho trovato queste soluzioni compatibili nella demo:':'I found these matching demo vehicles:')+found.map(c=>`<div class="result-card"><b>${c.name}</b>${c.year} • ${c.km.toLocaleString('it-IT')} km • € ${c.price.toLocaleString('it-IT')}<br><a href="veicolo.html?auto=${encodeURIComponent(c.name.replaceAll(' ','-'))}">${L==='it'?'Vedi il veicolo →':'View vehicle →'}</a></div>`).join(''));bot((L==='it'?'Se nessuna di queste è quella giusta, puoi inviare la tua richiesta a Italy Rent.':'If none is right for you, send your request to Italy Rent.')+arixContactButton());}
+ else{saveArixRequest();bot((L==='it'?'Al momento non trovo nel catalogo demo una vettura che corrisponda esattamente alla tua richiesta. Compila il modulo Contatti: Italy Rent potrà ricontattarti il prima possibile con una proposta personalizzata.':'I can’t find an exact match in the demo catalogue. Complete the Contact form and Italy Rent can get back to you with a tailored proposal.')+arixContactButton());}
+}
+function accept(v){usr(v);let key=flow[arix.step];arix.data[key]=v;arix.step++;if(arix.step<flow.length)ask();else finishArix();}
+if(chat){document.getElementById('arixBtn')?.addEventListener('click',startArix);document.getElementById('closeChat')?.addEventListener('click',()=>chat.classList.remove('open'));document.getElementById('chatForm')?.addEventListener('submit',e=>{e.preventDefault();let i=document.getElementById('chatInput'),v=i.value.trim();if(!v)return;accept(v);i.value=''});messages.addEventListener('click',e=>{let b=e.target.closest('.arix-choice');if(b)accept(b.dataset.v)});}
+document.querySelectorAll('.arix-start').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();startArix()}));
 
 document.querySelectorAll('.menu-toggle').forEach(btn=>{btn.addEventListener('click',()=>{const nav=btn.parentElement.querySelector('.main-nav');const open=nav.classList.toggle('open');btn.setAttribute('aria-expanded',open?'true':'false')})});
+
+// Prefill Contact form when arriving from ARIX
+if(location.pathname.endsWith('contatti.html') && new URLSearchParams(location.search).get('arix')==='1'){
+ try{
+  const d=JSON.parse(sessionStorage.getItem('arixRequest')||'{}');
+  const form=document.querySelector('.form');
+  if(form){
+   const sel=form.querySelector('select'); if(sel) sel.value='Ricerca veicolo con ARIX';
+   const loc=form.querySelector('input[placeholder="Dove ti trovi?"]'); if(loc&&d.location) loc.value=d.location;
+   const ta=form.querySelector('textarea'); if(ta){
+    const labels={mode:'Richiesta',type:'Tipologia',budget:'Budget max',year:'Anno minimo',km:'Km max',gear:'Cambio',fuel:'Alimentazione',brand:'Marca',model:'Modello'};
+    const rows=Object.entries(labels).filter(([k])=>d[k]).map(([k,l])=>`${l}: ${d[k]}`);
+    if(rows.length) ta.value='Richiesta avviata con ARIX\n'+rows.join('\n');
+   }
+  }
+ }catch(e){}
+}

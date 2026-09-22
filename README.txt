@@ -1,2 +1,6 @@
-Italy Rent Web Demo V2.1
-Mobile-first update: full IT/EN interface toggle, hamburger navigation, user-provided scooter and gozzo photos stored locally.
+Italy Rent Web Demo V2.3 — ARIX refinement
+- Removed redundant chat quick buttons
+- ARIX redirects to Contact form when no vehicle matches
+- ARIX request details prefill the Contact form
+- Compact ARIX CTA included on every public page
+- Mobile-first layout retained
