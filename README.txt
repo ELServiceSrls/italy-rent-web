@@ -9,3 +9,4 @@ Novità:
 IMPORTANTE: admin.html è un prototipo front-end e salva i dati nel browser (localStorage). Non è ancora un CMS multi-dispositivo né un archivio online. Per la produzione servono autenticazione, database e storage immagini lato server/Cloudflare.
 
 I testi privacy/cookie sono una struttura tecnica da completare e validare con i dati definitivi e i servizi realmente attivati prima della pubblicazione commerciale.
+Backend D1 + R2 configurato
