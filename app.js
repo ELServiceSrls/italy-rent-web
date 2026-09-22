@@ -1,10 +1,3 @@
-
-function vehicleImageUrl(url){
- if(!url)return 'assets/logo-symbol.png';
- const m=String(url).match(/^\/api\/image\/(.+)$/);
- if(m){let key=m[1];try{key=decodeURIComponent(key)}catch(e){}return '/api/image?key='+encodeURIComponent(key)}
- return url;
-}
 // V2.1 — bilingual IT/EN. The original Italian text is kept in the HTML;
 // this dictionary switches all principal visible interface/content text to English.
 const EN = {
@@ -125,7 +118,7 @@ function liveCard(v,mode){
   : `${v.type||''} • ${v.fuel||''} • ${v.gear||''} • ${v.seats||5} posti`;
  const price=sale?`€ ${euro(v.sale_price)}`:`da € ${euro(v.rent_price)}/giorno`;
  const action=sale?`<a class="primary" href="contatti.html?vehicle=${v.id}">Richiedi</a>`:`<a class="primary" href="prenotazione.html?vehicle=${v.id}">Prenota</a>`;
- return `<article class="car live-car" data-id="${v.id}"><div class="carpic"><img loading="lazy" src="${vehicleImageUrl(v.image_url)}" alt="${String(v.name||'Veicolo').replace(/"/g,'&quot;')}"><div class="photo-fallback">${v.name||'Veicolo'}</div><span class="badge ${sale?'sale-badge':''}">${sale?'Vendita':'Noleggio'}</span></div><div class="carbody"><h3>${v.name||'Veicolo'}</h3><div class="spec">${spec}</div><div class="price ${sale?'sale-price':''}">${price}</div><div class="car-actions"><a href="veicolo.html?id=${v.id}">Dettagli</a>${action}</div></div></article>`;
+ return `<article class="car live-car" data-id="${v.id}"><div class="carpic"><img loading="lazy" src="${v.image_url||'assets/logo-symbol.png'}" alt="${String(v.name||'Veicolo').replace(/"/g,'&quot;')}"><div class="photo-fallback">${v.name||'Veicolo'}</div><span class="badge ${sale?'sale-badge':''}">${sale?'Vendita':'Noleggio'}</span></div><div class="carbody"><h3>${v.name||'Veicolo'}</h3><div class="spec">${spec}</div><div class="price ${sale?'sale-price':''}">${price}</div><div class="car-actions"><a href="veicolo.html?id=${v.id}">Dettagli</a>${action}</div></div></article>`;
 }
 function liveEmpty(){return `<div class="catalog-empty"><b>${lang==='en'?'No vehicles currently available.':'Nessun veicolo disponibile al momento.'}</b><p>${lang==='en'?'Contact Italy Rent for a personalised request.':'Contatta Italy Rent per una richiesta personalizzata.'}</p><a class="btn greenbtn" href="contatti.html">${lang==='en'?'Contact us':'Contattaci'}</a></div>`}
 async function loadLiveCatalog(){
@@ -147,3 +140,5 @@ async function loadLiveCatalog(){
  }catch(e){console.error('Catalogo Italy Rent non disponibile',e)}
 }
 loadLiveCatalog();
+
+/* V2.9.2: cache refresh + R2 image route fix; layout unchanged */
