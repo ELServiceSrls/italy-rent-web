@@ -1,3 +1,2 @@
-Italy Rent Web Demo V2.0
-Mobile-first update: hamburger navigation, IT/EN toggle expanded, photographic cards for scooter/gozzo/mini excavator.
-Cloudflare deployment V2.0
+Italy Rent Web Demo V2.1
+Mobile-first update: full IT/EN interface toggle, hamburger navigation, user-provided scooter and gozzo photos stored locally.
