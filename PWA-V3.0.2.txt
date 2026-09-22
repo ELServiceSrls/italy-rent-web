@@ -1,0 +1,13 @@
+ITALY RENT V3.0.2 — PWA / ICONE
+Dominio: https://www.italyrent.eu
+
+Aggiunti:
+- favicon.ico ufficiale
+- Apple Touch Icon 180x180
+- icone PWA 192x192 e 512x512
+- manifest.webmanifest per sito pubblico
+- admin.webmanifest per Back Office
+- service worker per installabilita e cache statica
+- meta tag mobile/PWA su tutte le pagine
+
+Catalogo D1/R2 e API invariati.
