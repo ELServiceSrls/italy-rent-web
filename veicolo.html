@@ -8,7 +8,10 @@
 <script>
 (async function(){
   const box=document.getElementById('vehicleDetail');
-  const id=new URLSearchParams(location.search).get('id');
+  const params=new URL(window.location.href).searchParams;
+  const rawId=params.get('id');
+  const id=rawId ? String(rawId).trim() : '';
+  const legacyAuto=params.get('auto');
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const money=n=>Number(n||0).toLocaleString('it-IT',{maximumFractionDigits:0});
   const imageUrl=u=>(u||'assets/logo-symbol.png')
@@ -75,4 +78,4 @@
   }
 })();
 </script>
-<script src="app.js?v=3.0.3"></script><script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));}</script></body></html>
+<script src="app.js?v=3.0.4"></script><script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));}</script></body></html>
