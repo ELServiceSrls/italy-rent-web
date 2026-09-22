@@ -18,7 +18,7 @@
     .replace('/api/image/vehicles%2F','/api/image/vehicles/')
     .replace('/api/image/vehicles%2f','/api/image/vehicles/');
 
-  if(!id || !/^\\d+$/.test(id)){
+  if(!id || !/^\d+$/.test(id)){
     box.innerHTML='<div class="vehicle-error"><h1>Veicolo non trovato</h1><p>Il collegamento non contiene un veicolo valido.</p><a class="btn greenbtn" href="vendita.html">Torna al catalogo</a></div>';
     return;
   }
@@ -78,4 +78,4 @@
   }
 })();
 </script>
-<script src="app.js?v=3.0.4"></script><script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));}</script></body></html>
+<script src="app.js?v=3.0.5"></script><script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));}</script></body></html>
