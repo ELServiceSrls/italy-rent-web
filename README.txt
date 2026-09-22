@@ -1,6 +1,10 @@
-Italy Rent Web Demo V2.3 — ARIX refinement
-- Removed redundant chat quick buttons
-- ARIX redirects to Contact form when no vehicle matches
-- ARIX request details prefill the Contact form
-- Compact ARIX CTA included on every public page
-- Mobile-first layout retained
+Italy Rent Web Demo V2.6 — ARIX
+
+Aggiornamenti:
+- Email principale Italy Rent: italyrent2@gmail.com
+- Modulo Contatti configurato per inviare le richieste a italyrent2@gmail.com tramite FormSubmit
+- Le richieste avviate con ARIX vengono precompilate nella pagina Contatti
+- ARIX e chatbot presenti in tutte le pagine
+- Mobile-first, IT/EN
+
+Nota: al primo invio FormSubmit può richiedere la conferma una tantum dell'indirizzo italyrent2@gmail.com.

@@ -63,7 +63,7 @@ function ask(){let key=flow[arix.step],L=lang==='en'?'en':'it';let extra='';
  if(key==='brand'||key==='model') extra=options([L==='it'?'Indifferente':'Any']);
  bot(qs[L][key]+extra);
 }
-function startArix(){if(!chat)return;chat.classList.add('open');arix={step:0,data:{}};messages.innerHTML='';bot(lang==='en'?'<b>ARIX</b> here. I’ll ask you a few quick questions to find the best vehicle for you.':'Sono <b>ARIX</b>. Ti farò poche domande per trovare il veicolo più adatto a te.');ask();}
+function startArix(){if(!chat)return;chat.classList.add('open');document.body.classList.add('arix-chat-open');arix={step:0,data:{}};messages.innerHTML='';bot(lang==='en'?'<b>ARIX</b> here. I’ll ask you a few quick questions to find the best vehicle for you.':'Sono <b>ARIX</b>. Ti farò poche domande per trovare il veicolo più adatto a te.');ask();}
 function arixContactButton(){
  const L=lang==='en'?'en':'it';
  const label=L==='it'?'Vai alla pagina Contatti →':'Go to Contact page →';
@@ -83,7 +83,7 @@ function finishArix(){let d=arix.data,L=lang==='en'?'en':'it';let isBuy=/acquist
  else{saveArixRequest();bot((L==='it'?'Al momento non trovo nel catalogo demo una vettura che corrisponda esattamente alla tua richiesta. Compila il modulo Contatti: Italy Rent potrà ricontattarti il prima possibile con una proposta personalizzata.':'I can’t find an exact match in the demo catalogue. Complete the Contact form and Italy Rent can get back to you with a tailored proposal.')+arixContactButton());}
 }
 function accept(v){usr(v);let key=flow[arix.step];arix.data[key]=v;arix.step++;if(arix.step<flow.length)ask();else finishArix();}
-if(chat){document.getElementById('arixBtn')?.addEventListener('click',startArix);document.getElementById('closeChat')?.addEventListener('click',()=>chat.classList.remove('open'));document.getElementById('chatForm')?.addEventListener('submit',e=>{e.preventDefault();let i=document.getElementById('chatInput'),v=i.value.trim();if(!v)return;accept(v);i.value=''});messages.addEventListener('click',e=>{let b=e.target.closest('.arix-choice');if(b)accept(b.dataset.v)});}
+if(chat){document.getElementById('arixBtn')?.addEventListener('click',startArix);document.getElementById('closeChat')?.addEventListener('click',()=>{chat.classList.remove('open');document.body.classList.remove('arix-chat-open')});document.getElementById('chatForm')?.addEventListener('submit',e=>{e.preventDefault();let i=document.getElementById('chatInput'),v=i.value.trim();if(!v)return;accept(v);i.value=''});messages.addEventListener('click',e=>{let b=e.target.closest('.arix-choice');if(b)accept(b.dataset.v)});}
 document.querySelectorAll('.arix-start').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();startArix()}));
 
 document.querySelectorAll('.menu-toggle').forEach(btn=>{btn.addEventListener('click',()=>{const nav=btn.parentElement.querySelector('.main-nav');const open=nav.classList.toggle('open');btn.setAttribute('aria-expanded',open?'true':'false')})});
@@ -104,3 +104,6 @@ if(location.pathname.endsWith('contatti.html') && new URLSearchParams(location.s
   }
  }catch(e){}
 }
+
+// V2.5: dismiss the floating ARIX promo card independently from the chatbot
+document.querySelectorAll('.arix-card-close').forEach(btn=>btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();btn.closest('.arix-side-card')?.remove()}));

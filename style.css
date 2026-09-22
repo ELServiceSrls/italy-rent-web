@@ -30,3 +30,38 @@
 /* V2.3 — ARIX refinement */
 .quick{display:none!important}.arix-cta-compact{padding:20px 24px;grid-template-columns:1.5fr .5fr;margin-top:22px;margin-bottom:22px}.arix-cta-compact h2{font-size:27px;margin:5px 0 8px}.arix-cta-compact p{font-size:14px;line-height:1.5;margin:0 0 12px;max-width:780px}.arix-cta-compact .arix-cta-person{padding:10px 14px;border-radius:14px}.arix-cta-compact .arix-cta-person img{width:64px;height:64px}.arix-cta-compact .arix-cta-person b{font-size:20px}.arix-contact-btn{display:inline-block;margin-top:10px;background:var(--g);color:#fff!important;border-radius:9px;padding:10px 13px;font-weight:900;text-decoration:none}.messages{height:285px}
 @media(max-width:760px){.arix-cta-compact{padding:17px 18px;gap:12px}.arix-cta-compact h2{font-size:23px}.arix-cta-compact p{font-size:13px}.arix-cta-compact .arix-cta-person{justify-self:start}.arix-cta-compact .arix-cta-person img{width:54px;height:54px}.messages{height:320px}}
+
+
+/* V2.4 — ARIX global floating assistant card */
+.arix-side-card{position:fixed;right:22px;bottom:92px;width:230px;z-index:48;background:linear-gradient(145deg,#10283a,#173c4c);color:#fff;border-radius:18px;padding:16px;box-shadow:0 16px 36px #0d223544;border:1px solid #ffffff24;text-align:center}
+.arix-side-card>img{width:68px;height:68px;border-radius:50%;object-fit:cover;object-position:center 20%;border:3px solid #50d58b;margin:0 auto 8px;display:block}
+.arix-side-copy span{display:block;font-size:10px;letter-spacing:1.2px;color:#65df99;font-weight:900;margin-bottom:5px}
+.arix-side-copy b{display:block;font-size:17px;line-height:1.18;margin-bottom:3px}
+.arix-side-copy strong{display:block;color:#65df99;font-size:19px;line-height:1.15;margin-bottom:7px}
+.arix-side-copy p{font-size:12px;line-height:1.35;color:#e4edef;margin:0 0 10px}
+.arix-side-card .arix-start{width:100%;border:0;border-radius:10px;background:#00a650;color:#fff;padding:10px 8px;font-weight:900;cursor:pointer}
+@media(max-width:760px){
+ .arix-side-card{right:10px;bottom:76px;width:178px;padding:10px 11px;border-radius:15px;text-align:left;display:grid;grid-template-columns:44px 1fr;gap:8px;align-items:center}
+ .arix-side-card>img{width:44px;height:44px;margin:0;grid-row:1/3}
+ .arix-side-copy span,.arix-side-copy p{display:none}
+ .arix-side-copy b{font-size:12px;margin:0}
+ .arix-side-copy strong{font-size:14px;margin:1px 0 6px}
+ .arix-side-card .arix-start{font-size:11px;padding:7px 6px}
+}
+
+
+/* V2.5 — ARIX taller chat and dismissible side card */
+.chat{width:400px;max-height:calc(100vh - 115px)}
+.messages{height:390px;max-height:calc(100vh - 285px)}
+.arix-card-close{position:absolute;top:8px;right:9px;width:28px;height:28px;border:0;border-radius:50%;background:#ffffff18;color:#fff;font-size:22px;line-height:26px;cursor:pointer;display:grid;place-items:center;z-index:2}
+.arix-card-close:hover{background:#ffffff2c}
+.arix-side-card{transition:opacity .18s ease,transform .18s ease}
+body.arix-chat-open .arix-side-card{opacity:0;pointer-events:none;transform:translateY(8px)}
+@media(max-width:760px){
+ .chat{top:82px;bottom:14px;right:10px;width:calc(100vw - 20px);max-height:none;display:none;flex-direction:column}
+ .chat.open{display:flex}
+ .chat-head{flex:0 0 auto}
+ .messages{height:auto;max-height:none;min-height:0;flex:1;overflow:auto}
+ .arix-progress,.chat-note,.chat form{flex:0 0 auto}
+ .arix-card-close{top:5px;right:5px;width:24px;height:24px;font-size:19px}
+}
