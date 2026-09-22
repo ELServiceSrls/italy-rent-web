@@ -1,0 +1,11 @@
+ITALY RENT V2.8 - BACK-OFFICE CENTRALE
+
+Questa versione contiene il back-office desktop e le API Cloudflare Pages Functions.
+Per attivare il salvataggio online servono 3 binding nel progetto Cloudflare Pages:
+1) D1 database binding: DB
+2) R2 bucket binding: VEHICLE_IMAGES
+3) Environment variable/secret: ADMIN_KEY (chiave riservata al team)
+
+Eseguire schema.sql sul database D1 una sola volta.
+L'area admin NON è linkata dal menu pubblico. URL: /admin.html
+Le immagini vengono archiviate in R2; i dati veicolo in D1.

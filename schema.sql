@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS vehicles (
+ id INTEGER PRIMARY KEY AUTOINCREMENT,
+ name TEXT NOT NULL, type TEXT, year INTEGER, km INTEGER, fuel TEXT, gear TEXT, seats INTEGER DEFAULT 5,
+ for_rent INTEGER DEFAULT 1, for_sale INTEGER DEFAULT 0, featured INTEGER DEFAULT 0,
+ rent_price REAL DEFAULT 0, sale_price REAL DEFAULT 0, status TEXT DEFAULT 'Disponibile',
+ description TEXT, image_url TEXT, created_at TEXT DEFAULT CURRENT_TIMESTAMP, updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+);

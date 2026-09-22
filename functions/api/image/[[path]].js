@@ -1,0 +1,1 @@
+export async function onRequestGet({params,env}){const key=Array.isArray(params.path)?params.path.join('/'):params.path;const o=await env.VEHICLE_IMAGES.get(key);if(!o)return new Response('Not found',{status:404});const h=new Headers();o.writeHttpMetadata(h);h.set('Cache-Control','public, max-age=86400');return new Response(o.body,{headers:h})}

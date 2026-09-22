@@ -1,10 +1,11 @@
-Italy Rent Web Demo V2.6 — ARIX
+ITALY RENT WEB DEMO — V2.7
 
-Aggiornamenti:
-- Email principale Italy Rent: italyrent2@gmail.com
-- Modulo Contatti configurato per inviare le richieste a italyrent2@gmail.com tramite FormSubmit
-- Le richieste avviate con ARIX vengono precompilate nella pagina Contatti
-- ARIX e chatbot presenti in tutte le pagine
-- Mobile-first, IT/EN
+Novità:
+- Privacy Policy e Cookie Policy collegate dal footer.
+- Email principale: italyrent2@gmail.com.
+- Area admin dimostrativa: admin.html.
+- Inserimento/modifica veicoli con foto, prezzo noleggio, prezzo vendita, stato e caratteristiche.
 
-Nota: al primo invio FormSubmit può richiedere la conferma una tantum dell'indirizzo italyrent2@gmail.com.
+IMPORTANTE: admin.html è un prototipo front-end e salva i dati nel browser (localStorage). Non è ancora un CMS multi-dispositivo né un archivio online. Per la produzione servono autenticazione, database e storage immagini lato server/Cloudflare.
+
+I testi privacy/cookie sono una struttura tecnica da completare e validare con i dati definitivi e i servizi realmente attivati prima della pubblicazione commerciale.
