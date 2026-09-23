@@ -121,7 +121,11 @@ function liveCard(v,mode){
  const image=(v.image_url||'assets/logo-symbol.png').replace('/api/image/vehicles%2F','/api/image/vehicles/').replace('/api/image/vehicles%2f','/api/image/vehicles/');
  return `<article class="car live-car" data-id="${v.id}"><div class="carpic"><img loading="lazy" src="${image}" alt="${String(v.name||'Veicolo').replace(/"/g,'&quot;')}"><div class="photo-fallback">${v.name||'Veicolo'}</div><span class="badge ${sale?'sale-badge':''}">${sale?'Vendita':'Noleggio'}</span></div><div class="carbody"><h3>${v.name||'Veicolo'}</h3><div class="spec">${spec}</div><div class="price ${sale?'sale-price':''}">${price}</div><div class="car-actions"><a href="veicolo.html?id=${v.id}">Dettagli</a>${action}</div></div></article>`;
 }
-function liveEmpty(){return `<div class="catalog-empty"><b>${lang==='en'?'No vehicles currently available.':'Nessun veicolo disponibile al momento.'}</b><p>${lang==='en'?'Contact Italy Rent for a personalised request.':'Contatta Italy Rent per una richiesta personalizzata.'}</p><a class="btn greenbtn" href="contatti.html">${lang==='en'?'Contact us':'Contattaci'}</a></div>`}
+function liveEmpty(){
+ const rental=(location.pathname.split('/').pop()||'').replace(/\.html$/,'')==='noleggio';
+ if(rental)return `<div class="catalog-empty"><b>${lang==='en'?'Looking for a rental car?':'Cerchi un’auto a noleggio?'}</b><p>${lang==='en'?'The online fleet changes frequently. Send us your dates or ask ARIX and Italy Rent will confirm current availability.':'La flotta online può cambiare rapidamente. Inviaci le date oppure chiedi ad ARIX: Italy Rent confermerà la disponibilità effettiva.'}</p><a class="btn greenbtn rental-request" href="contatti.html">${lang==='en'?'Request availability':'Richiedi disponibilità'}</a> <button class="btn arix-start" type="button">${lang==='en'?'Ask ARIX':'Chiedi ad ARIX'}</button></div>`;
+ return `<div class="catalog-empty"><b>${lang==='en'?'No vehicles currently available.':'Nessun veicolo disponibile al momento.'}</b><p>${lang==='en'?'Contact Italy Rent for a personalised request.':'Contatta Italy Rent per una richiesta personalizzata.'}</p><a class="btn greenbtn" href="contatti.html">${lang==='en'?'Contact us':'Contattaci'}</a></div>`
+}
 async function loadLiveCatalog(){
  const box=document.querySelector('.cars'); if(!box)return;
  try{
@@ -145,3 +149,44 @@ async function loadLiveCatalog(){
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',loadLiveCatalog); else loadLiveCatalog();
 
 /* V2.9.2: cache refresh + R2 image route fix; layout unchanged */
+
+// V3.1.0 — rental search: validates/retains dates and filters the real rental catalogue.
+// Note: the current D1 schema has no booking calendar, so dates are forwarded for confirmation
+// rather than falsely presented as real-time booking availability.
+function initRentalSearch(){
+ const form=document.getElementById('rentalSearch');
+ if(!form)return;
+ const start=document.getElementById('rentStart'), end=document.getElementById('rentEnd'),
+       cat=document.getElementById('rentCategory'), note=document.getElementById('rentalSearchNote');
+ const qs=new URLSearchParams(location.search);
+ start.value=qs.get('ritiro')||''; end.value=qs.get('riconsegna')||''; cat.value=qs.get('categoria')||'Tutte';
+ const today=new Date(); today.setMinutes(today.getMinutes()-today.getTimezoneOffset());
+ const min=today.toISOString().slice(0,10); start.min=min; end.min=min;
+ start.addEventListener('change',()=>{end.min=start.value||min;if(end.value&&start.value&&end.value<=start.value)end.value=''});
+ function requestUrl(){
+   const q=new URLSearchParams({tipo:'Noleggio auto'});
+   if(start.value)q.set('ritiro',start.value); if(end.value)q.set('riconsegna',end.value);
+   if(cat.value&&cat.value!=='Tutte')q.set('categoria',cat.value);
+   return 'contatti.html?'+q.toString();
+ }
+ function apply(){
+   let list=LIVE_VEHICLES.filter(v=>+v.for_rent);
+   if(cat.value!=='Tutte')list=list.filter(v=>(v.type||'').toLowerCase()===cat.value.toLowerCase());
+   const box=document.querySelector('.cars');
+   box.innerHTML=list.length?list.map(v=>liveCard(v,'rent')).join(''):liveEmpty();
+   document.querySelectorAll('.rental-request').forEach(a=>a.href=requestUrl());
+   note.textContent=(start.value&&end.value)
+     ? (lang==='en'?'Dates saved. Final availability is confirmed by Italy Rent.':'Date memorizzate. La disponibilità definitiva viene confermata da Italy Rent.')
+     : '';
+ }
+ form.addEventListener('submit',e=>{
+   e.preventDefault();
+   if(!start.value||!end.value){note.textContent=lang==='en'?'Enter pick-up and return dates.':'Inserisci data di ritiro e riconsegna.';return}
+   if(end.value<=start.value){note.textContent=lang==='en'?'Return must be after pick-up.':'La riconsegna deve essere successiva al ritiro.';return}
+   const q=new URLSearchParams({ritiro:start.value,riconsegna:end.value,categoria:cat.value});
+   history.replaceState(null,'',location.pathname+'?'+q.toString());
+   apply();
+ });
+ setTimeout(apply,450);
+}
+window.addEventListener('DOMContentLoaded',initRentalSearch);

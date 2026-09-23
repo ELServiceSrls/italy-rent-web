@@ -139,3 +139,8 @@ body.arix-chat-open .arix-side-card{opacity:0;pointer-events:none;transform:tran
   .gioia span b{font-size:16px}
   .gioia small{font-size:12px;white-space:normal;line-height:1.2}
 }
+
+/* V3.1.0 — rental flow */
+.rental-search-note{margin-top:10px;font-size:14px;color:#425466;min-height:20px}
+.catalog-empty .arix-start{margin-left:8px;background:#123247;color:#fff;border:0;cursor:pointer}
+@media(max-width:760px){.catalog-empty .arix-start{margin:8px 0 0 0;display:inline-block}}
