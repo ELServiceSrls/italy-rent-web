@@ -144,3 +144,41 @@ body.arix-chat-open .arix-side-card{opacity:0;pointer-events:none;transform:tran
 .rental-search-note{margin-top:10px;font-size:14px;color:#425466;min-height:20px}
 .catalog-empty .arix-start{margin-left:8px;background:#123247;color:#fff;border:0;cursor:pointer}
 @media(max-width:760px){.catalog-empty .arix-start{margin:8px 0 0 0;display:inline-block}}
+
+
+/* V3.1.1 — ARIX launcher compatto su smartphone */
+@media(max-width:760px){
+  .gioia{
+    right:10px;
+    bottom:12px;
+    width:auto;
+    max-width:170px;
+    min-height:48px;
+    padding:4px 10px 4px 4px;
+    gap:7px;
+    border-width:2px;
+    border-radius:28px;
+  }
+  .gioia .avatar{
+    width:40px;
+    height:40px;
+    flex:0 0 40px;
+  }
+  .gioia span{
+    display:block;
+    min-width:74px;
+    line-height:1.05;
+  }
+  .gioia span b{
+    display:block;
+    font-size:14px;
+    line-height:1.05;
+  }
+  .gioia small{
+    font-size:10px;
+    line-height:1.1;
+    white-space:nowrap;
+    overflow:hidden;
+    max-width:44px;
+  }
+}
