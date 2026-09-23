@@ -211,3 +211,11 @@ body.arix-chat-open .arix-side-card{opacity:0;pointer-events:none;transform:tran
     overflow:visible !important;
   }
 }
+
+/* V1.3.1 — flusso noleggio */
+.catalog-empty .rental-request{margin-right:14px;margin-bottom:10px}
+.catalog-empty .arix-start{margin-left:0!important;margin-bottom:10px}
+@media(max-width:760px){
+  .catalog-empty .rental-request,
+  .catalog-empty .arix-start{display:inline-flex;margin-right:10px!important;margin-bottom:12px!important}
+}

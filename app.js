@@ -163,30 +163,36 @@ function initRentalSearch(){
  const today=new Date(); today.setMinutes(today.getMinutes()-today.getTimezoneOffset());
  const min=today.toISOString().slice(0,10); start.min=min; end.min=min;
  start.addEventListener('change',()=>{end.min=start.value||min;if(end.value&&start.value&&end.value<=start.value)end.value=''});
- function requestUrl(){
-   const q=new URLSearchParams({tipo:'Noleggio auto'});
-   if(start.value)q.set('ritiro',start.value); if(end.value)q.set('riconsegna',end.value);
-   if(cat.value&&cat.value!=='Tutte')q.set('categoria',cat.value);
-   return 'contatti.html?'+q.toString();
- }
- function apply(){
-   let list=LIVE_VEHICLES.filter(v=>+v.for_rent);
-   if(cat.value!=='Tutte')list=list.filter(v=>(v.type||'').toLowerCase()===cat.value.toLowerCase());
-   const box=document.querySelector('.cars');
-   box.innerHTML=list.length?list.map(v=>liveCard(v,'rent')).join(''):liveEmpty();
-   document.querySelectorAll('.rental-request').forEach(a=>a.href=requestUrl());
-   note.textContent=(start.value&&end.value)
-     ? (lang==='en'?'Dates saved. Final availability is confirmed by Italy Rent.':'Date memorizzate. La disponibilità definitiva viene confermata da Italy Rent.')
-     : '';
- }
  form.addEventListener('submit',e=>{
    e.preventDefault();
    if(!start.value||!end.value){note.textContent=lang==='en'?'Enter pick-up and return dates.':'Inserisci data di ritiro e riconsegna.';return}
    if(end.value<=start.value){note.textContent=lang==='en'?'Return must be after pick-up.':'La riconsegna deve essere successiva al ritiro.';return}
-   const q=new URLSearchParams({ritiro:start.value,riconsegna:end.value,categoria:cat.value});
-   history.replaceState(null,'',location.pathname+'?'+q.toString());
-   apply();
+   const q=new URLSearchParams({
+     motivo:'Noleggio auto',
+     ritiro:start.value,
+     riconsegna:end.value,
+     categoria:cat.value
+   });
+   location.href='contatti.html?'+q.toString();
  });
- setTimeout(apply,450);
 }
 window.addEventListener('DOMContentLoaded',initRentalSearch);
+
+// V3.1.1 — precompila il modulo contatti dalle richieste commerciali.
+function initContactRequest(){
+ const form=document.querySelector('form.form');
+ if(!form)return;
+ const q=new URLSearchParams(location.search);
+ const motivo=q.get('motivo'), ritiro=q.get('ritiro'), riconsegna=q.get('riconsegna'), categoria=q.get('categoria');
+ if(!motivo && !ritiro && !riconsegna && !categoria)return;
+ const select=form.querySelector('select[name="Motivo"]');
+ if(select && motivo) select.value=motivo;
+ const msg=form.querySelector('textarea[name="Messaggio"]');
+ if(msg && motivo==='Noleggio auto'){
+   const fmt=s=>{if(!s)return ''; const [y,m,d]=s.split('-'); return `${d}/${m}/${y}`};
+   msg.value=`Richiesta disponibilità noleggio\nRitiro: ${fmt(ritiro)}\nRiconsegna: ${fmt(riconsegna)}\nCategoria: ${categoria||'Tutte'}\n\n`;
+ }
+ const subject=form.querySelector('input[name="_subject"]');
+ if(subject && motivo==='Noleggio auto') subject.value='Richiesta disponibilità noleggio - Italy Rent';
+}
+window.addEventListener('DOMContentLoaded',initContactRequest);
