@@ -180,3 +180,34 @@ body.arix-chat-open .arix-side-card{opacity:0;pointer-events:none;transform:tran
     display:none !important;
   }
 }
+
+
+/* V1.3 — Hero borgo Audi + brand + ARIX online */
+.hero{
+  background:
+    linear-gradient(90deg,#102331f2 0%,#102331dc 31%,#10233178 49%,#10233118 68%,transparent 82%),
+    url('assets/hero-borgo-audi.jpg') center 56%/cover no-repeat !important;
+}
+.brand img{width:56px}
+.brand strong{font-size:27px}
+.brand small{font-size:10px;letter-spacing:1.6px}
+
+@media(max-width:760px){
+  .brand img{width:46px}
+  .brand strong{font-size:20px}
+  .hero{background-position:57% center !important}
+  .gioia{
+    max-width:132px !important;
+    padding-right:10px !important;
+  }
+  .gioia span b{font-size:14px !important}
+  .gioia small{
+    display:block !important;
+    font-size:9px !important;
+    line-height:1.05 !important;
+    white-space:nowrap !important;
+    color:#65727c !important;
+    max-width:none !important;
+    overflow:visible !important;
+  }
+}
